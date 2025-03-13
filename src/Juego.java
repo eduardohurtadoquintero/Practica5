@@ -145,11 +145,12 @@ public class Juego {
                     if (totalCartas == 0) {
                         System.out.println("El mazo está vacío.");
                     } else {
-                        for (int i = 0; i < totalCartas; i++) {
-                            System.out.println("  - " + mazo.tomarCarta());
+                        for (Carta carta : mazo.getCartas()) {
+                            System.out.println("  - " + carta);
                         }
                     }
                 }
+
                 case 5 -> {
                     mazo.regresarMazoOriginal();
                 }

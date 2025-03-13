@@ -1,9 +1,10 @@
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class Mazo {
     private ArrayList<Carta> mazo;
-    private ArrayList<Carta> mazoOriginal;  // Para guardar el mazo original
+    private ArrayList<Carta> mazoOriginal;
 
     public Mazo() {
         mazo = new ArrayList<>();
@@ -12,27 +13,31 @@ public class Mazo {
 
     public void agregarCarta(Carta carta) {
         mazo.add(carta);
-        mazoOriginal.add(carta); // También agregamos la carta al mazo original
+        mazoOriginal.add(new Carta(carta.palo, carta.valor)); // ✅ Clonamos para evitar referencias compartidas
     }
 
     public void barajar() {
-        Collections.shuffle(mazo);
+        Collections.shuffle(mazo); // ✅ Baraja directamente el mazo real
+        System.out.println("El mazo ha sido barajado.");
     }
 
     public void regresarMazoOriginal() {
-        mazo = new ArrayList<>(mazoOriginal);  // Restauramos el mazo original
+        mazo.clear();
+        for (Carta carta : mazoOriginal) {
+            mazo.add(new Carta(carta.palo, carta.valor)); // ✅ Clonamos las cartas originales
+        }
         System.out.println("El mazo ha vuelto a su estado original.");
     }
 
     public Carta tomarCarta() {
         if (!mazo.isEmpty()) {
-            return mazo.remove(0);
+            return mazo.remove(0); // ✅ Esto permitirá tomar cartas correctamente
         }
         return null;
     }
 
     public int cartasDisponibles() {
-        return mazo.size();
+        return mazo.size(); // devuelve el tamaño real del mazo
     }
 
     public void repartirCartas(ArrayList<Jugador> jugadores, int numCartas) {
@@ -50,9 +55,13 @@ public class Mazo {
         }
     }
 
-    // metodo para devolver una carta al mazo
     public void regresarCartaAlMazo(Carta carta) {
         mazo.add(carta);
         System.out.println("La carta " + carta + " ha sido regresada al mazo.");
+    }
+
+    // Devuelve una vista de solo lectura para reflejar los cambios tras barajar
+    public List<Carta> getCartas() {
+        return Collections.unmodifiableList(mazo);
     }
 }
