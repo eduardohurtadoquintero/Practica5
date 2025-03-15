@@ -113,7 +113,7 @@ public class Juego {
                     if (jugador != null) {
                         Carta carta = mazo.tomarCarta();
                         if (carta != null) {
-                            jugador.addCarta(carta);
+                            jugador.addCarta(carta); // Agrega la carta al jugador
                             System.out.println(nombre + " tomó la carta: " + carta);
                         } else {
                             System.out.println("No hay más cartas en el mazo.");
@@ -150,9 +150,8 @@ public class Juego {
                         }
                     }
                 }
-
                 case 5 -> {
-                    mazo.regresarMazoOriginal();
+                    mazo.regresarMazoOriginal(jugadores);
                 }
                 case 6 -> {
                     System.out.print("¿Qué carta quieres regresar al mazo (Ejemplo: 1 Corazones)? ");
@@ -162,8 +161,29 @@ public class Juego {
                     Palo palo = Palo.valueOf(partes[1].toUpperCase());
 
                     Carta carta = new Carta(palo, valor);
-                    mazo.regresarCartaAlMazo(carta);
+
+                    // Variable para saber si la carta fue regresada
+                    boolean cartaRegresada = false;
+
+                    // Buscar al jugador que tiene la carta
+                    for (Jugador jugador : jugadores) {
+                        if (jugador.getCartas().contains(carta)) {
+                            // Eliminar la carta del jugador
+                            jugador.getCartas().remove(carta);
+                            mazo.regresarCartaAlMazo(carta);
+                            cartaRegresada = true;
+                            System.out.println("La carta " + carta + " ha sido regresada al mazo.");
+                            break; // Ya no es necesario seguir buscando
+                        }
+                    }
+
+                    // Si la carta no fue regresada, informamos al usuario
+                    if (!cartaRegresada) {
+                        System.out.println("La carta no fue encontrada en ninguna mano de los jugadores.");
+                    }
                 }
+
+
                 case 7 -> {
                     System.out.println("Saliendo del juego...");
                     return;

@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 public class Carta {
     public Palo palo;
     public int valor;
@@ -18,5 +20,19 @@ public class Carta {
             default -> valorStr = String.valueOf(valor);
         }
         return valorStr + " de " + palo;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        // Si las cartas son del mismo tipo y tienen los mismos valores de palo y valor
+        if (this == obj) return true; // Si es la misma instancia
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Carta carta = (Carta) obj;
+        return valor == carta.valor && palo == carta.palo;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(palo, valor);
     }
 }

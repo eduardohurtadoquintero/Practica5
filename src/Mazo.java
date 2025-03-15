@@ -13,25 +13,33 @@ public class Mazo {
 
     public void agregarCarta(Carta carta) {
         mazo.add(carta);
-        mazoOriginal.add(new Carta(carta.palo, carta.valor)); // ✅ Clonamos para evitar referencias compartidas
+        mazoOriginal.add(new Carta(carta.palo, carta.valor)); // Clonamos para evitar referencias compartidas
     }
 
     public void barajar() {
-        Collections.shuffle(mazo); // ✅ Baraja directamente el mazo real
+        Collections.shuffle(mazo); // Baraja directamente el mazo real
         System.out.println("El mazo ha sido barajado.");
     }
 
-    public void regresarMazoOriginal() {
+    public void regresarMazoOriginal(ArrayList<Jugador> jugadores) {
+        // Primero, regresamos las cartas de los jugadores al mazo
+        for (Jugador jugador : jugadores) {
+            for (Carta carta : jugador.getCartas()) {
+                mazo.add(carta); // Regresamos las cartas al mazo
+            }
+            jugador.getCartas().clear(); // Limpiamos las cartas del jugador
+        }
+
         mazo.clear();
         for (Carta carta : mazoOriginal) {
-            mazo.add(new Carta(carta.palo, carta.valor)); // ✅ Clonamos las cartas originales
+            mazo.add(new Carta(carta.palo, carta.valor)); // Clonamos las cartas originales
         }
         System.out.println("El mazo ha vuelto a su estado original.");
     }
 
     public Carta tomarCarta() {
         if (!mazo.isEmpty()) {
-            return mazo.remove(0); // ✅ Esto permitirá tomar cartas correctamente
+            return mazo.remove(0); // Remueve la carta del mazo
         }
         return null;
     }
@@ -63,5 +71,9 @@ public class Mazo {
     // Devuelve una vista de solo lectura para reflejar los cambios tras barajar
     public List<Carta> getCartas() {
         return Collections.unmodifiableList(mazo);
+    }
+
+    public void clear() {
+        mazo.clear();
     }
 }
